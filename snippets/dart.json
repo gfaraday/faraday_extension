@@ -1,0 +1,35 @@
+{
+    "Faraday Feature": {
+        "prefix": [
+            "ff",
+            "faraday",
+            "feature"
+        ],
+        "body": [
+            "class ${1:name} extends Feature {",
+            "  @override",
+            "  String get name => '${1:/(.*)/${1:/downcase}/}';",
+            "",
+            "  @override",
+            "  Map<String, RouteFactory> get pageBuilders => {",
+            "        '${1:/(.*)/${1:/downcase}/}_home': (settings) =>",
+            "            CupertinoPageRoute(builder: (context) => Text('${1}')),",
+            "      };",
+            "  ",
+            "  // common method",
+            "  @common",
+            "  static getData(int id) {}",
+            "",
+            "  // entry",
+            "  @entry",
+            "  static ${1/(.*)/${1:/downcase}/}Home() {}",
+            "",
+            "  // api",
+            "  fetchUser(String id) {",
+            "    return FaradayNet.get(id);",
+            "  }",
+            "}"
+        ],
+        "description": "new faraday feature"
+    }
+}
