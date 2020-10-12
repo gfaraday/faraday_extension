@@ -1,10 +1,16 @@
 {
-	"name": "faraday-plugin",
+	"name": "faraday-extension",
 	"displayName": "faraday",
-	"description": "faraday plugin",
+	"description": "faraday extension",
 	"version": "0.0.1",
+	"publisher": "yuxiaormobileteam",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/gfaraday/faraday_extension"
+	},
 	"engines": {
-		"vscode": "^1.48.0"
+		"vscode": "^1.50.0"
 	},
 	"categories": [
 		"Snippets",
