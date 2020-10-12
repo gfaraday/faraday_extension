@@ -12,6 +12,12 @@
 
 ![AutoCompletion](images/completion.gif)
 
+初始化 config
+
+snippets
+[ff]
+
+
 ## Requirements
 
 安装 faraday cli

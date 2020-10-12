@@ -40,8 +40,6 @@ export async function activate(context: ExtensionContext) {
 		window.showInformationMessage('Hello World vscode');
 	});
 
-
-
 	context.subscriptions.push(disposable);
 
 	context.subscriptions.push(languages.registerCompletionItemProvider(
@@ -50,11 +48,7 @@ export async function activate(context: ExtensionContext) {
 
 	context.subscriptions.push(commands.registerCommand('faraday.config', () => config(faraday)));
 	context.subscriptions.push(commands.registerCommand('faraday.generate', (ctx) => generate(faraday, ctx)));
-
-	// context.subscriptions.push(commands.registerCommand('faraday.tag', () => {
-	// 	if (!hasFaraday) { return warnNotFaradayModule('tag'); }
-	// 	return null;
-	// }));
+	// context.subscriptions.push(commands.registerCommand('faraday.tag', () => tag));
 }
 
 // this method is called when your extension is deactivated

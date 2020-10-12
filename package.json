@@ -19,7 +19,6 @@
 	"activationEvents": [
 		"onCommand:faraday.config",
 		"onCommand:faraday.generate",
-		"onCommand:faraday.tag",
 		"workspaceContains:**/.faraday.json"
 	],
 	"main": "./out/extension.js",
@@ -32,10 +31,6 @@
 			{
 				"command": "faraday.generate",
 				"title": "Faraday: Generate Route&Common Method(s) for Swift&Kotlin"
-			},
-			{
-				"command": "faraday.tag",
-				"title": "Faraday: Tag Current Workspace"
 			}
 		],
 		"snippets": [
