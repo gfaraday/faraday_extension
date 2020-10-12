@@ -2,7 +2,7 @@ import { CancellationToken, CompletionContext, CompletionItem, CompletionItemKin
 import { Faraday } from './faraday';
 
 export class FaradayCompletionItemProvider implements CompletionItemProvider {
-  
+
   readonly faraday: Faraday;
 
   constructor(faraday: Faraday) {
@@ -21,28 +21,28 @@ export class FaradayCompletionItemProvider implements CompletionItemProvider {
             let continueFindEndCurlyBraces = true;
             let lineCount = position.line + 1;
             while (continueFindEndCurlyBraces) {
-                const line = document.lineAt(lineCount);
-                if (line.isEmptyOrWhitespace) {
-                  lineCount++;
-                  continueFindEndCurlyBraces = lineCount < document.lineCount;
-                } else {
-                  if (line.text.endsWith('}')) {
-                    //
-                    const offset = document.offsetAt(position);
-                    const sourceCode = text.substr(0, offset - 1) + text.substr(offset);
-                    
-                    console.log('faraday', 'parse source code' );
-                    let result = this.faraday.completion(document, document.offsetAt(position), sourceCode)
-                    .then(r => [new CompletionItem('return ' + r.stdout + ';\n', CompletionItemKind.Function)])
-                    .catch(() => null);
-                    
-                    return result;
+              const line = document.lineAt(lineCount);
+              if (line.isEmptyOrWhitespace) {
+                lineCount++;
+                continueFindEndCurlyBraces = lineCount < document.lineCount;
+              } else {
+                if (line.text.endsWith('}')) {
+                  //
+                  const offset = document.offsetAt(position);
+                  const sourceCode = text.substr(0, offset - 1) + text.substr(offset);
 
-                  } else {
-                    continueFindEndCurlyBraces = false;
-                  }
+                  console.log('faraday', 'parse source code');
+                  let result = this.faraday.completion(document, document.offsetAt(position), sourceCode)
+                    .then(r => [new CompletionItem(r.stdout, CompletionItemKind.Method)])
+                    .catch(() => null);
+
+                  return result;
+
+                } else {
+                  continueFindEndCurlyBraces = false;
                 }
               }
+            }
           }
         }
       }

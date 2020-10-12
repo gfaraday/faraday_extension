@@ -44,7 +44,7 @@ export async function activate(context: ExtensionContext) {
 
 	context.subscriptions.push(languages.registerCompletionItemProvider(
 		{ language: 'dart', scheme: 'file', pattern: '**/lib/**/*.dart' },
-		new FaradayCompletionItemProvider(faraday), 'r'));
+		new FaradayCompletionItemProvider(faraday), 'F', 'N', 'f', 'n'));
 
 	context.subscriptions.push(commands.registerCommand('faraday.config', () => config(faraday)));
 	context.subscriptions.push(commands.registerCommand('faraday.generate', (ctx) => generate(faraday, ctx)));

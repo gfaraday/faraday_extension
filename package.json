@@ -26,7 +26,7 @@
 		"commands": [
 			{
 				"command": "faraday.config",
-				"title": "Faraday: Configure Route、Common、Net for Flutter Module"
+				"title": "Faraday: Configure Route、Common for Flutter Module"
 			},
 			{
 				"command": "faraday.generate",
