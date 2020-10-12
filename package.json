@@ -2,7 +2,7 @@
 	"name": "faraday-extension",
 	"displayName": "faraday",
 	"description": "faraday extension",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "yuxiaormobileteam",
 	"license": "MIT",
 	"repository": {
