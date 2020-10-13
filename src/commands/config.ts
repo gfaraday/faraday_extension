@@ -35,6 +35,9 @@ export async function config(faraday: Faraday) {
     const uris = await window.showOpenDialog({ openLabel: item.label, canSelectMany: true, filters: JSON.parse(item.detail!) });
     //
     var data = fs.existsSync(configJSONPath) ? fs.readFileSync(configJSONPath, 'utf8') : '{}';
+    if (data.trim().length == 0) {
+      data = '{}'
+    }
     var config = JSON.parse(data);
 
     if (uris !== undefined) {
