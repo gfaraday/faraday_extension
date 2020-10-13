@@ -6,7 +6,7 @@ import { assign, dispose, IDisposable, onceEvent, toDisposable } from './util';
 export function findFaraday(): Promise<string> {
   return new Promise<string>(async (resolve, reject) => {
     try {
-      const child = cp.spawn('faraday', ['--version']);
+      const child = cp.spawn('faraday', ['--version'], { shell: process.platform == 'win32' });
       const bufferResult = await exec(child);
       const version = bufferResult.stdout.toString('utf8').trim()
       version.length == 0 ? reject('') : resolve(version)
@@ -102,6 +102,7 @@ export class Faraday {
       options.stdio = ['ignore', null, null]; // Unless provided, ignore stdin and leave default streams for stdout and stderr
     }
 
+    options.shell = process.platform == 'win32'
 
     options.env = assign({}, process.env, options.env || {}, {
       // eslint-disable-next-line @typescript-eslint/naming-convention
