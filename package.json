@@ -2,13 +2,14 @@
 	"name": "faraday-extension",
 	"displayName": "faraday",
 	"description": "faraday extension",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"publisher": "yuxiaormobileteam",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/gfaraday/faraday_extension"
 	},
+	"icon": "images/icon.png",
 	"engines": {
 		"vscode": "^1.50.0"
 	},

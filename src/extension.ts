@@ -18,8 +18,8 @@ export async function activate(context: ExtensionContext) {
 
 	var faraday: Faraday;
 	try {
-		const path = await findFaraday();
-		faraday = new Faraday(path);
+		await findFaraday();
+		faraday = new Faraday('faraday');
 		faraday.onOutput.on('log', (message => outputChannel.appendLine(message)));
 	} catch (e) {
 		// 提示用户安装 faraday

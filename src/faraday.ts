@@ -4,11 +4,16 @@ import { CancellationToken, TextDocument } from 'vscode';
 import { assign, dispose, IDisposable, onceEvent, toDisposable } from './util';
 
 export function findFaraday(): Promise<string> {
-  return new Promise<string>(async (resolve) => {
-    const child = cp.spawn('which', ['faraday']);
-    const bufferResult = await exec(child);
-    resolve(bufferResult.stdout.toString('utf8').trim());
-  });
+  return new Promise<string>(async (resolve, reject) => {
+    try {
+      const child = cp.spawn('faraday', ['--version']);
+      const bufferResult = await exec(child);
+      const version = bufferResult.stdout.toString('utf8').trim()
+      version.length == 0 ? reject('') : resolve(version)
+    } catch (err) {
+      reject(err)
+    }
+  })
 }
 
 export function activateFaraday(): Promise<string> {
