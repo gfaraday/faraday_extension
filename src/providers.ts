@@ -29,10 +29,8 @@ export class FaradayCompletionItemProvider implements CompletionItemProvider {
                 if (line.text.endsWith('}')) {
                   //
                   const offset = document.offsetAt(position);
-                  const sourceCode = text.substr(0, offset - 1) + text.substr(offset);
-
                   console.log('faraday', 'parse source code');
-                  let result = this.faraday.completion(document, document.offsetAt(position), sourceCode)
+                  let result = this.faraday.completion(document, document.offsetAt(position))
                     .then(r => [new CompletionItem(r.stdout, CompletionItemKind.Method)])
                     .catch(() => null);
 
