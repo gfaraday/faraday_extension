@@ -27,20 +27,8 @@ export async function activate(context: ExtensionContext) {
 		return;
 	}
 
-	outputChannel.appendLine('hey faraday cli');
-
+	outputChannel.appendLine('faraday cli activated');
 	outputChannel.show(true);
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = commands.registerCommand('faraday.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-
-		// Display a message box to the user
-		window.showInformationMessage('Hello World vscode');
-	});
-
-	context.subscriptions.push(disposable);
 
 	context.subscriptions.push(languages.registerCompletionItemProvider(
 		{ language: 'dart', scheme: 'file', pattern: '**/lib/**/*.dart' },

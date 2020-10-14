@@ -12,7 +12,8 @@ export class FaradayCompletionItemProvider implements CompletionItemProvider {
   provideCompletionItems(document: TextDocument, position: Position, token: CancellationToken, context: CompletionContext): ProviderResult<CompletionItem[] | CompletionList<CompletionItem>> {
 
     console.log('provideCompletionItems');
-    if (position.character - document.lineAt(position).firstNonWhitespaceCharacterIndex === 1) {
+    const line = document.lineAt(position)
+    if ((position.character - document.lineAt(position).firstNonWhitespaceCharacterIndex === 1) || line.text.startsWith('return ', line.firstNonWhitespaceCharacterIndex)) {
       const text = document.getText();
       if (text.includes("import 'package:g_faraday/g_faraday.dart';")) {
         if (text.includes('extends Feature')) {
@@ -29,8 +30,8 @@ export class FaradayCompletionItemProvider implements CompletionItemProvider {
                 if (line.text.endsWith('}')) {
                   //
                   const offset = document.offsetAt(position);
-                  console.log('faraday', 'parse source code');
-                  let result = this.faraday.completion(document, document.offsetAt(position))
+                  console.log('faraday', 'parse source code', 'offset: ', offset);
+                  let result = this.faraday.completion(document, offset)
                     .then(r => [new CompletionItem(r.stdout, CompletionItemKind.Method)])
                     .catch(() => null);
 
