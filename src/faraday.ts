@@ -73,7 +73,7 @@ export class Faraday {
   }
 
   async completion(sourceCode: string, offset: number): Promise<IExecutionResult<string>> {
-    return this._exec(['completion', '--offset', `${offset}`, '--source-code', sourceCode]);
+    return this._exec(['completion', '--offset', `${offset}`, '--source-code', Buffer.from(sourceCode).toString('base64')]);
   }
 
   async init(module: string): Promise<string> {
@@ -102,6 +102,7 @@ export class Faraday {
     }
 
     options.shell = process.platform == 'win32'
+    options.encoding = 'utf-8'
 
     options.env = assign({}, process.env, options.env || {}, {
       // eslint-disable-next-line @typescript-eslint/naming-convention
