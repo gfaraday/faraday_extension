@@ -72,8 +72,8 @@ export class Faraday {
     return result;
   }
 
-  async completion(document: TextDocument, offset: number): Promise<IExecutionResult<string>> {
-    return this._exec(['completion', '--offset', `${offset}`, '--file', document.uri.fsPath]);
+  async completion(sourceCode: string, offset: number): Promise<IExecutionResult<string>> {
+    return this._exec(['completion', '--offset', `${offset}`, '--source-code', sourceCode]);
   }
 
   async init(module: string): Promise<string> {

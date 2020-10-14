@@ -31,7 +31,7 @@ export class FaradayCompletionItemProvider implements CompletionItemProvider {
                   //
                   const offset = document.offsetAt(position);
                   console.log('faraday', 'parse source code', 'offset: ', offset);
-                  let result = this.faraday.completion(document, offset)
+                  let result = this.faraday.completion(text, offset)
                     .then(r => [new CompletionItem(r.stdout, CompletionItemKind.Method)])
                     .catch(() => null);
 
