@@ -75,9 +75,9 @@ export async function warnAboutMissingFaradayCLI() {
   }
 }
 
-export function warnNotFaradayModule(command: string): Thenable<string | undefined> {
+export function warnNotFaradayModule(): Thenable<string | undefined> {
   if (workspace.workspaceFolders !== undefined && workspace.workspaceFolders.length > 1) {
     return window.showWarningMessage(`faraday currently don't support multiple workspaces.`);
   }
-  return window.showWarningMessage(`flutter module or g_faraday dependency not found. [ faraday.${command} ]`);
+  return window.showWarningMessage(`flutter module or g_faraday dependency not found.`);
 }

@@ -80,12 +80,16 @@ export class Faraday {
     return this._exec(['init', '--project', module]).then(r => r.stdout);
   }
 
-  async generate(args: string[], file: string | undefined, cwd: string | undefined) {
+  async tag(module: string, release: boolean, cancellationToken?: CancellationToken): Promise<string> {
+    return this._exec(['tag', '--project', module, release ? '--release' : '--no-release'], { cancellationToken: cancellationToken }).then(r => r.stdout);
+  }
+
+  async generate(args: string[], file: string | undefined, cwd: string | undefined, cancellationToken?: CancellationToken) {
     const ps = ['generate'].concat(args);
     if (file !== undefined) {
       ps.push('--file', file);
     }
-    return this._exec(ps, { cwd: cwd });
+    return this._exec(ps, { cwd: cwd, cancellationToken: cancellationToken });
   }
 
   private spawn(args: string[], options: SpawnOptions = {}): cp.ChildProcess {

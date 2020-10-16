@@ -1,14 +1,9 @@
 import { Faraday } from "../faraday";
-import { warnNotFaradayModule, workspaceHasDependencyFaraday } from "../shared";
 import * as fs from 'fs';
 import * as path from 'path';
 import { window, workspace } from "vscode";
 
 export async function config(faraday: Faraday) {
-
-  const hasFaraday = await workspaceHasDependencyFaraday();
-
-  if (!hasFaraday) { return warnNotFaradayModule('config'); }
 
   const rootPath = workspace.workspaceFolders![0].uri.fsPath;
 

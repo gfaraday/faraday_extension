@@ -1,15 +1,10 @@
 import { ProgressLocation, Uri, window, workspace } from "vscode";
 import { Faraday } from "../faraday";
-import { readFaradayJSON, warnNotFaradayModule, workspaceHasDependencyFaraday } from "../shared";
+import { readFaradayJSON } from "../shared";
 import * as configCommands from './config';
 import * as path from 'path';
 
-export async function generate(faraday: Faraday, uri: Uri | undefined) {
-
-  const hasFaraday = await workspaceHasDependencyFaraday();
-
-  if (!hasFaraday) { return warnNotFaradayModule('generate'); }
-
+export async function generate(faraday: Faraday, uri: Uri | undefined = undefined) {
   return doGenerate(faraday, true, uri);
 }
 
@@ -74,9 +69,9 @@ async function doGenerate(faraday: Faraday, autoConfig: boolean, uri: Uri | unde
 }
 
 async function runFaradayGenerate(faraday: Faraday, args: string[], file: string | undefined) {
-  return window.withProgress({ location: ProgressLocation.Notification, title: `Faraday generating codes for ${file !== undefined ? path.basename(file) : 'module'} ...` }, async () => {
+  return window.withProgress({ location: ProgressLocation.Notification, title: `Faraday generating codes for ${file !== undefined ? path.basename(file) : 'module'} ...` }, async (_, token) => {
     try {
-      await faraday.generate(args, file, workspace.workspaceFolders !== undefined ? workspace.workspaceFolders[0].uri.fsPath : undefined);
+      await faraday.generate(args, file, workspace.workspaceFolders !== undefined ? workspace.workspaceFolders[0].uri.fsPath : undefined, token);
     } catch (e) {
       window.showErrorMessage(`faraday generate failed. ${e}`);
     }
