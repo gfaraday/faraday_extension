@@ -2,7 +2,7 @@
 	"name": "faraday-extension",
 	"displayName": "faraday",
 	"description": "faraday extension",
-	"version": "0.0.12",
+	"version": "0.0.13",
 	"publisher": "yuxiaormobileteam",
 	"license": "MIT",
 	"repository": {
@@ -25,7 +25,7 @@
 		"onCommand:faraday.generate",
 		"onCommand:faraday.publish"
 	],
-	"main": "./dist/extension.js",
+	"main": "./dist/extension",
 	"contributes": {
 		"commands": [
 			{
@@ -65,14 +65,10 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "yarn run compile",
-		"compile": "tsc -p ./",
-		"lint": "eslint src --ext ts",
-		"watch": "tsc -watch -p ./",
-		"pretest": "yarn run compile && yarn run lint",
-		"test": "node ./out/test/runTest.js",
+		"vscode:prepublish": "webpack --mode production",
 		"webpack": "webpack --mode development",
 		"webpack-dev": "webpack --mode development --watch",
+		"watch": "tsc -watch -p ./",
 		"test-compile": "tsc -p ./"
 	},
 	"devDependencies": {

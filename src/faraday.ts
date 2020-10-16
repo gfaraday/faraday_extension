@@ -80,7 +80,7 @@ export class Faraday {
     return this._exec(['init', '--project', module]).then(r => r.stdout);
   }
 
-  async tag(module: string, release: boolean, cancellationToken?: CancellationToken): Promise<string> {
+  async tag(module: string, platforms: string, release: boolean, cancellationToken?: CancellationToken): Promise<string> {
     return this._exec(['tag', '--project', module, release ? '--release' : '--no-release'], { cancellationToken: cancellationToken }).then(r => r.stdout);
   }
 

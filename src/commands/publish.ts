@@ -11,6 +11,9 @@ export async function publish(faraday: Faraday, context: ExtensionContext) {
     return warnNotFaradayModule()
   }
 
+  const platforms = await pickPlatforms(context)
+  if (platforms == undefined) return
+
   const mode = await pickPublishMode(context)
   if (mode == undefined) return
 
@@ -27,7 +30,7 @@ export async function publish(faraday: Faraday, context: ExtensionContext) {
 
   window.withProgress({ cancellable: true, location: ProgressLocation.Notification, title: `publishing ${document['name']} mode: ${mode.toLowerCase()} version: ${version} ...` }, async (_, token) => {
     try {
-      await faraday.tag(module, mode == 'Release', token)
+      await faraday.tag(module, platforms, mode == 'Release', token)
       window.showInformationMessage('faraday publish succeed.')
     } catch (e) {
       window.showErrorMessage(`faraday publish new version failed. ${e}`);
@@ -137,6 +140,34 @@ async function pickPublishMode(context: ExtensionContext): Promise<string | unde
         resolve(undefined)
       } else {
         resolve(item[0].label)
+      }
+    })
+    quickPick.onDidHide(() => quickPick.dispose());
+    quickPick.show();
+  })
+}
+
+async function pickPlatforms(context: ExtensionContext): Promise<string | undefined | null> {
+  return new Promise((resolve) => {
+    const quickPick = window.createQuickPick()
+    quickPick.title = 'Select Release Platforms'
+    quickPick.items = [
+      {
+        label: 'iOS',
+        picked: true
+      },
+      {
+        label: 'Android'
+      },
+      {
+        label: 'Both',
+        detail: 'iOS and Android'
+      }]
+    quickPick.onDidChangeSelection((item) => {
+      if (item == undefined) {
+        resolve(undefined)
+      } else {
+        resolve(item[0].label == 'Both' ? 'ios,android' : item[0].label.toLowerCase())
       }
     })
     quickPick.onDidHide(() => quickPick.dispose());
