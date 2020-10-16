@@ -12,9 +12,6 @@ import { warnAboutMissingFaradayCLI, warnNotFaradayModule, workspaceHasDependenc
 // your extension is activated the very first time the command is executed
 export async function activate(context: ExtensionContext) {
 
-	console.log('Congratulations, your extension "faraday" is now active!');
-
-	console.log(workspace.workspaceFolders);
 	const outputChannel = window.createOutputChannel('Faraday');
 
 	var faraday: Faraday;
@@ -30,10 +27,6 @@ export async function activate(context: ExtensionContext) {
 
 	outputChannel.appendLine('faraday cli activated');
 	outputChannel.show(true);
-
-	const hasFaraday = await workspaceHasDependencyFaraday();
-
-	if (!hasFaraday) { return warnNotFaradayModule(); }
 
 	context.subscriptions.push(languages.registerCompletionItemProvider(
 		{ language: 'dart', scheme: 'file', pattern: '**/lib/**/*.dart' },
