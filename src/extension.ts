@@ -33,7 +33,7 @@ export async function activate(context: ExtensionContext) {
 		new FaradayCompletionItemProvider(faraday), 'F', 'N', 'f', 'n'));
 
 	context.subscriptions.push(commands.registerCommand('faraday.config', () => config(faraday)));
-	context.subscriptions.push(commands.registerCommand('faraday.generate', (ctx) => generate(faraday)));
+	context.subscriptions.push(commands.registerCommand('faraday.generate', (_) => generate(faraday)));
 	context.subscriptions.push(commands.registerCommand('faraday.publish', (ctx) => publish(faraday, ctx)));
 	// context.subscriptions.push(commands.registerCommand('faraday.tag', () => tag));
 }

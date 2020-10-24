@@ -2,7 +2,7 @@
 	"name": "faraday-extension",
 	"displayName": "faraday",
 	"description": "faraday extension",
-	"version": "0.0.13",
+	"version": "0.0.14",
 	"publisher": "yuxiaormobileteam",
 	"license": "MIT",
 	"repository": {
@@ -83,14 +83,14 @@
 		"eslint": "^7.6.0",
 		"glob": "^7.1.6",
 		"mocha": "^8.1.3",
+		"ts-loader": "^8.0.6",
 		"typescript": "^4.0.2",
+		"webpack": "^5.1.2",
+		"webpack-cli": "^4.0.0",
 		"vscode-test": "^1.4.0"
 	},
 	"dependencies": {
 		"semver": "^7.3.2",
-		"ts-loader": "^8.0.5",
-		"webpack": "^5.1.2",
-		"webpack-cli": "^4.0.0",
 		"yaml": "^1.10.0"
 	}
 }
