@@ -11,20 +11,19 @@ export async function generate(faraday: Faraday, uri: Uri | undefined = undefine
 async function doGenerate(faraday: Faraday, autoConfig: boolean, uri: Uri | undefined) {
   const config = readFaradayJSON();
   if (Object.keys(config).length === 0) {
-    if (!autoConfig) {
-      return;
-    }
-    const activate = "Config";
-    const choice = await window.showWarningMessage(
-      "config file not found. please config first`",
-      'Config',
-    );
-
-    if (choice === activate) {
-      await configCommands.config(faraday);
-      doGenerate(faraday, false, uri);
-    }
+    return;
   }
+  //   const activate = "Config";
+  //   const choice = await window.showWarningMessage(
+  //     ".faraday.json not found.",
+  //     'Config',
+  //   );
+
+  //   if (choice === activate) {
+  //     await configCommands.config(faraday, undefined);
+  //     doGenerate(faraday, false, uri);
+  //   }
+  // }
 
   const args = Object.keys(config).filter(k => !k.includes('net')).flatMap(k => [`--${k}`, config[k]]);
 

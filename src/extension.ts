@@ -7,6 +7,8 @@ import { publish } from './commands/publish';
 import { Faraday, findFaraday } from './faraday';
 import { FaradayCompletionItemProvider } from './providers';
 import { warnAboutMissingFaradayCLI, warnNotFaradayModule, workspaceHasDependencyFaraday } from './shared';
+import * as path from 'path';
+import * as fs from 'fs';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -28,14 +30,27 @@ export async function activate(context: ExtensionContext) {
 	outputChannel.appendLine('faraday cli activated');
 	outputChannel.show(true);
 
+	// 判断有没有 .faraday.json 文件 有的话 再注册下面的服务
+	const rootPath = workspace.workspaceFolders![0].uri.fsPath;
+
+	const configJSONPath = path.join(rootPath, '.faraday.json');
+	// 判断.faraday.json 文件是否存在
+	if (!fs.existsSync(configJSONPath)) {
+		context.subscriptions.push(commands.registerCommand('faraday.config', () => config(faraday, context, undefined)));
+		context.subscriptions.push(commands.registerCommand('faraday.generate', (_) => config(faraday, context, 'generate')));
+		context.subscriptions.push(commands.registerCommand('faraday.publish', (_) => config(faraday, context, 'publish')));
+		config(faraday, context, undefined)
+		return
+	}
+
 	context.subscriptions.push(languages.registerCompletionItemProvider(
 		{ language: 'dart', scheme: 'file', pattern: '**/lib/**/*.dart' },
-		new FaradayCompletionItemProvider(faraday), 'F', 'N', 'f', 'n'));
+		new FaradayCompletionItemProvider(faraday), 'F', 'f'));
 
-	context.subscriptions.push(commands.registerCommand('faraday.config', () => config(faraday)));
+
 	context.subscriptions.push(commands.registerCommand('faraday.generate', (_) => generate(faraday)));
 	context.subscriptions.push(commands.registerCommand('faraday.publish', (ctx) => publish(faraday, ctx)));
-	// context.subscriptions.push(commands.registerCommand('faraday.tag', () => tag));
+	context.subscriptions.push(commands.registerCommand('faraday.config', (ctx) => config(faraday, ctx, undefined)));
 }
 
 // this method is called when your extension is deactivated

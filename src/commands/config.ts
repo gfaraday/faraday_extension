@@ -1,21 +1,19 @@
 import { Faraday } from "../faraday";
 import * as fs from 'fs';
 import * as path from 'path';
-import { window, workspace } from "vscode";
+import { ExtensionContext, window, workspace } from "vscode";
+import { generate } from "./generate";
+import { publish } from "./publish";
 
-export async function config(faraday: Faraday) {
+export async function config(faraday: Faraday, ctx: ExtensionContext, invokeByOtherCommand: String | undefined) {
 
   const rootPath = workspace.workspaceFolders![0].uri.fsPath;
 
   const configJSONPath = path.join(rootPath, '.faraday.json');
-  // 判断.faraday.json 文件是否存在
-  if (!fs.existsSync(configJSONPath)) {
-    fs.writeFileSync(configJSONPath, JSON.stringify({}));
-  }
 
   const quickPick = window.createQuickPick();
 
-  quickPick.title = 'Config faraday for current module';
+  quickPick.title = 'Config faraday for g_faraday module';
   quickPick.items = [{
     label: 'Choose ios FaradayRoute.swift、FaradayCommon.swift',
     detail: JSON.stringify({ files: ['swift'] })
@@ -55,6 +53,13 @@ export async function config(faraday: Faraday) {
       });
 
       await faraday.init(rootPath);
+
+      //
+      if (invokeByOtherCommand == 'generate') {
+        generate(faraday)
+      } else if (invokeByOtherCommand == 'publish') {
+        publish(faraday, ctx);
+      }
     }
   });
   quickPick.onDidHide(() => quickPick.dispose());
