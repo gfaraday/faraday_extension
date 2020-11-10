@@ -6,7 +6,7 @@ import { publish } from './commands/publish';
 // Import the module and reference it with the alias vscode in your code below
 import { Faraday, findFaraday } from './faraday';
 import { FaradayCompletionItemProvider } from './providers';
-import { warnAboutMissingFaradayCLI, warnNotFaradayModule, workspaceHasDependencyFaraday } from './shared';
+import { warnAboutMissingFaradayCLI, isDependencyFaradayModule, warnNotFaradayModule } from './shared';
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -30,27 +30,44 @@ export async function activate(context: ExtensionContext) {
 	outputChannel.appendLine('faraday cli activated');
 	outputChannel.show(true);
 
-	// 判断有没有 .faraday.json 文件 有的话 再注册下面的服务
-	const rootPath = workspace.workspaceFolders![0].uri.fsPath;
+	const folders = workspace.workspaceFolders;
+	if (folders != undefined && folders.length > 0) {
 
-	const configJSONPath = path.join(rootPath, '.faraday.json');
-	// 判断.faraday.json 文件是否存在
-	if (!fs.existsSync(configJSONPath)) {
-		context.subscriptions.push(commands.registerCommand('faraday.config', () => config(faraday, context, undefined)));
-		context.subscriptions.push(commands.registerCommand('faraday.generate', (_) => config(faraday, context, 'generate')));
-		context.subscriptions.push(commands.registerCommand('faraday.publish', (_) => config(faraday, context, 'publish')));
-		config(faraday, context, undefined)
-		return
+		let faradayFolder: string | undefined = undefined
+
+		for (const folder of folders) {
+			if (await isDependencyFaradayModule(folder)) {
+
+				// 判断有没有 .faraday.json 文件 有的话 再注册下面的服务
+				const rootPath = folder.uri.fsPath;
+
+				// 
+				faradayFolder = rootPath;
+
+				const configJSONPath = path.join(rootPath, '.faraday.json');
+				// 判断.faraday.json 文件是否存在
+				if (!fs.existsSync(configJSONPath)) {
+					config(faraday, faradayFolder, context, undefined)
+					return
+				}
+				break
+			}
+		}
+
+		if (faradayFolder != undefined) {
+			context.subscriptions.push(languages.registerCompletionItemProvider(
+				{ language: 'dart', scheme: 'file', pattern: '**/lib/**/*.dart' },
+				new FaradayCompletionItemProvider(faraday), 'F', 'f'));
+
+			context.subscriptions.push(commands.registerCommand('faraday.generate', (_) => generate(faraday, faradayFolder!!)));
+			context.subscriptions.push(commands.registerCommand('faraday.publish', (ctx) => publish(faraday, ctx)));
+			context.subscriptions.push(commands.registerCommand('faraday.config', (ctx) => config(faraday, faradayFolder!!, ctx, undefined)));
+		} else {
+			context.subscriptions.push(commands.registerCommand('faraday.generate', warnNotFaradayModule));
+			context.subscriptions.push(commands.registerCommand('faraday.publish', warnNotFaradayModule));
+			context.subscriptions.push(commands.registerCommand('faraday.config', warnNotFaradayModule));
+		}
 	}
-
-	context.subscriptions.push(languages.registerCompletionItemProvider(
-		{ language: 'dart', scheme: 'file', pattern: '**/lib/**/*.dart' },
-		new FaradayCompletionItemProvider(faraday), 'F', 'f'));
-
-
-	context.subscriptions.push(commands.registerCommand('faraday.generate', (_) => generate(faraday)));
-	context.subscriptions.push(commands.registerCommand('faraday.publish', (ctx) => publish(faraday, ctx)));
-	context.subscriptions.push(commands.registerCommand('faraday.config', (ctx) => config(faraday, ctx, undefined)));
 }
 
 // this method is called when your extension is deactivated

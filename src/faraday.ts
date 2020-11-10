@@ -84,8 +84,8 @@ export class Faraday {
     return this._exec(['tag', '--project', module, '--platforms', platforms, release ? '--release' : '--no-release'], { cancellationToken: cancellationToken }).then(r => r.stdout);
   }
 
-  async generate(args: string[], file: string | undefined, cwd: string | undefined, cancellationToken?: CancellationToken) {
-    const ps = ['generate'].concat(args);
+  async generate(file: string | undefined, cwd: string | undefined, cancellationToken?: CancellationToken) {
+    const ps = ['generate'];
     if (file !== undefined) {
       ps.push('--file', file);
     }

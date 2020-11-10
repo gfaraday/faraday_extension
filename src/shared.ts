@@ -13,7 +13,7 @@ export async function workspaceHasDependencyFaraday(): Promise<boolean> {
   return isDependencyFaradayModule(workspace.workspaceFolders[0]);
 }
 
-async function isDependencyFaradayModule(folder: WorkspaceFolder): Promise<boolean> {
+export async function isDependencyFaradayModule(folder: WorkspaceFolder): Promise<boolean> {
   if (folder.uri.scheme !== 'file') {
     return false;
   }
@@ -22,7 +22,10 @@ async function isDependencyFaradayModule(folder: WorkspaceFolder): Promise<boole
     if (fs.existsSync(pubspecPath)) {
       fs.readFile(pubspecPath, (err, buffer) => {
         if (err === null) {
-          resolve(buffer.toString('utf-8').includes('g_faraday'));
+          const text = buffer.toString('utf-8');
+          resolve(text.includes('g_faraday:'));
+        } else {
+          resolve(false);
         }
       });
     }
@@ -32,11 +35,7 @@ async function isDependencyFaradayModule(folder: WorkspaceFolder): Promise<boole
   });
 }
 
-export function readFaradayJSON(): any {
-  if (!workspace.workspaceFolders) {
-    return {};
-  }
-  const rootPath = workspace.workspaceFolders[0].uri.fsPath;
+export function readFaradayJSON(rootPath: string): any {
   const configJSONPath = path.join(rootPath, '.faraday.json');
   //
   var data = fs.existsSync(configJSONPath) ? fs.readFileSync(configJSONPath, 'utf8') : '{}';

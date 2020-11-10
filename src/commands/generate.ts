@@ -1,76 +1,54 @@
 import { ProgressLocation, Uri, window, workspace } from "vscode";
 import { Faraday } from "../faraday";
 import { readFaradayJSON } from "../shared";
-import * as configCommands from './config';
 import * as path from 'path';
 
-export async function generate(faraday: Faraday, uri: Uri | undefined = undefined) {
-  return doGenerate(faraday, true, uri);
+export async function generate(faraday: Faraday, rootPath: string, uri: Uri | undefined = undefined) {
+  return doGenerate(faraday, rootPath, uri);
 }
 
-async function doGenerate(faraday: Faraday, autoConfig: boolean, uri: Uri | undefined) {
-  const config = readFaradayJSON();
-  if (Object.keys(config).length === 0) {
-    return;
-  }
-  //   const activate = "Config";
-  //   const choice = await window.showWarningMessage(
-  //     ".faraday.json not found.",
-  //     'Config',
-  //   );
+async function doGenerate(faraday: Faraday, rootPath: string, uri: Uri | undefined) {
 
-  //   if (choice === activate) {
-  //     await configCommands.config(faraday, undefined);
-  //     doGenerate(faraday, false, uri);
-  //   }
-  // }
-
-  const args = Object.keys(config).filter(k => !k.includes('net')).flatMap(k => [`--${k}`, config[k]]);
-
-  if (args.length > 0) {
-    if (uri !== undefined) {
-      if (uri.scheme === 'file' && uri.fsPath.endsWith('.dart')) {
-        return runFaradayGenerate(faraday, args, uri.fsPath);
-      } else {
-        return faraday.log('generated failed. ' + uri.fsPath);
-      }
-    }
-
-    const current = window.activeTextEditor?.document.uri.fsPath || '';
-    if (current.endsWith('.dart')) {
-      const quickPick = window.createQuickPick();
-
-      quickPick.title = 'Generate codes for current file or whole project';
-      quickPick.items = [{
-        label: 'Current File',
-        detail: current,
-        picked: true
-      }, {
-        label: 'Scan Project'
-      }];
-      quickPick.onDidChangeSelection(async selection => {
-        quickPick.hide();
-        if (selection[0].label === 'Scan Project') {
-          return runFaradayGenerate(faraday, args, undefined);
-        } else {
-          return runFaradayGenerate(faraday, args, current);
-        }
-      });
-
-      quickPick.onDidHide(() => quickPick.dispose());
-      quickPick.show();
+  if (uri !== undefined) {
+    if (uri.scheme === 'file' && uri.fsPath.endsWith('.dart')) {
+      return runFaradayGenerate(faraday, uri.fsPath, rootPath);
     } else {
-      return runFaradayGenerate(faraday, args, undefined);
+      return faraday.log('generated failed. ' + uri.fsPath);
     }
+  }
+
+  const current = window.activeTextEditor?.document.uri.fsPath || '';
+  if (current.endsWith('.dart')) {
+    const quickPick = window.createQuickPick();
+
+    quickPick.title = 'Generate codes for current file or whole project';
+    quickPick.items = [{
+      label: 'Current File',
+      detail: current,
+      picked: true
+    }, {
+      label: 'Scan Project'
+    }];
+    quickPick.onDidChangeSelection(async selection => {
+      quickPick.hide();
+      if (selection[0].label === 'Scan Project') {
+        return runFaradayGenerate(faraday, undefined, rootPath);
+      } else {
+        return runFaradayGenerate(faraday, current, rootPath);
+      }
+    });
+
+    quickPick.onDidHide(() => quickPick.dispose());
+    quickPick.show();
   } else {
-    faraday.log('generate args isEmpty.');
+    return runFaradayGenerate(faraday, undefined, rootPath);
   }
 }
 
-async function runFaradayGenerate(faraday: Faraday, args: string[], file: string | undefined) {
+async function runFaradayGenerate(faraday: Faraday, file: string | undefined, rootPath: string) {
   return window.withProgress({ location: ProgressLocation.Notification, title: `Faraday generating codes for ${file !== undefined ? path.basename(file) : 'module'} ...` }, async (_, token) => {
     try {
-      await faraday.generate(args, file, workspace.workspaceFolders !== undefined ? workspace.workspaceFolders[0].uri.fsPath : undefined, token);
+      await faraday.generate(file, rootPath, token);
     } catch (e) {
       window.showErrorMessage(`faraday generate failed. ${e}`);
     }

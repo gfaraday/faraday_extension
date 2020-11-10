@@ -5,9 +5,7 @@ import { ExtensionContext, window, workspace } from "vscode";
 import { generate } from "./generate";
 import { publish } from "./publish";
 
-export async function config(faraday: Faraday, ctx: ExtensionContext, invokeByOtherCommand: String | undefined) {
-
-  const rootPath = workspace.workspaceFolders![0].uri.fsPath;
+export async function config(faraday: Faraday, rootPath: string, ctx: ExtensionContext, invokeByOtherCommand: String | undefined) {
 
   const configJSONPath = path.join(rootPath, '.faraday.json');
 
@@ -56,7 +54,7 @@ export async function config(faraday: Faraday, ctx: ExtensionContext, invokeByOt
 
       //
       if (invokeByOtherCommand == 'generate') {
-        generate(faraday)
+        generate(faraday, rootPath)
       } else if (invokeByOtherCommand == 'publish') {
         publish(faraday, ctx);
       }
