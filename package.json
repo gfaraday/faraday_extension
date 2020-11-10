@@ -14,6 +14,7 @@
 		"vscode": "^1.50.0"
 	},
 	"categories": [
+		"Snippets",
 		"Other"
 	],
 	"activationEvents": [
@@ -41,7 +42,12 @@
 				"title": "Faraday: Publish New Version Cocoapods、AAR"
 			}
 		],
-		"snippets": [],
+		"snippets": [
+			{
+				"language": "dart",
+				"path": "./snippets/dart.json"
+			}
+		],
 		"menus": {
 			"editor/context": [
 				{
