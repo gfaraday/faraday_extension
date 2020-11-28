@@ -1,29 +1,20 @@
-# faraday_extension （TODO）
+# faraday_extension
 
-对`faraday_cli`的一个包装， 提供vscode的自动完成提示，以及命令行包装
+[g_faraday](https://github.com/gfaraday/g_faraday)混合开发工具, 使用此插件之前请确认你已熟知[faraday cli](https://github.com/gfaraday/cli)的功能与指责
 
 ## Features
 
-命令行：
+[x] 可视化初始化`flutter module`项目
+[x] 生成 Common&Entry
+[x] Auto Completion from common methods
+[x] 打包发布
 
-![commands](images/commands.png)
+### Example
+
+配置项目
+
+生成代码
+
+打包发布
 
 自动完成
-
-![AutoCompletion](images/completion.gif)
-
-初始化 config
-
-snippets
-[ff]
-
-
-## Requirements
-
-安装 faraday cli
-
-``` shell
-
-pub global activate faraday
-
-```

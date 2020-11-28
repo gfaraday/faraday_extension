@@ -48,7 +48,7 @@ export async function activate(context: ExtensionContext) {
 				// 判断.faraday.json 文件是否存在
 				if (!fs.existsSync(configJSONPath)) {
 					config(faraday, faradayFolder, context, undefined)
-					return
+					break
 				}
 				break
 			}
