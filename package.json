@@ -2,7 +2,7 @@
 	"name": "faraday-extension",
 	"displayName": "Faraday",
 	"description": "Integrate FaradayCLI into VS Code",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"publisher": "yuxiaormobileteam",
 	"license": "MIT",
 	"repository": {
