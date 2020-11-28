@@ -1,0 +1,47 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Package
+
+on:
+  push:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  check_version:
+    name: Check Version
+    runs-on: ubuntu-latest
+    outputs:
+      git_tag_name: ${{ steps.tag_check.outputs.git_tag_name }}
+    steps:
+      - uses: actions/checkout@v2 # https://github.com/actions/checkout
+      - uses: dudo/tag_check@v1.0.2
+        id: tag_check
+        with:
+          git_tag_prefix: v
+
+  push_tag:
+    name: Push Tag
+    needs: check_version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2 # https://github.com/actions/checkout
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.26.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CUSTOM_TAG: ${{ needs.check_version.outputs.git_tag_name }}
+
+  vsce_pub:
+    name: Publish new Pub version
+    needs: check_version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: sigma/vsce-publish-action@v0.0.2
+        with:
+            vsce_token: ${{ secrets.VSCE_TOKEN }}
